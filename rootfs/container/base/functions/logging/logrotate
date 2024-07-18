@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: © 2024 Dave Conroy <dave@tiredofit.ca>
+#
+# SPDX-License-Identifier: MIT
+
 toi_configure_scheduling_logrotate_init() {
     print_debug "Enabling log rotation"
     case "${LOGROTATE_COMPRESSION_TYPE,,}" in

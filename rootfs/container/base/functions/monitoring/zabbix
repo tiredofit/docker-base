@@ -1,8 +1,8 @@
 # SPDX-FileCopyrightText: © 2024 Dave Conroy <dave@tiredofit.ca>
 #
 # SPDX-License-Identifier: MIT
+
 toi_configure_monitoring_zabbix_init() {
-    echo "HEY YOU ARE RUNNING TOI CONFIGUREMONITORING_ZABBIX_INIT"
     print_debug "Using Zabbix Backend"
     os=$(cat /etc/os-release |grep ^ID= | cut -d = -f2)
     if var_true "${DEBUG_MODE}" ; then

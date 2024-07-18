@@ -1,7 +1,12 @@
+#!/command/with-contenv bash
+# SPDX-FileCopyrightText: © 2024 Dave Conroy <dave@tiredofit.ca>
+#
+# SPDX-License-Identifier: MIT
+
 source /container/base/functions/container/init
 
 if var_false "${CONTAINER_SKIP_SANITY_CHECK}" ; then
-    files_init=$(find /container/init/init.d/ -maxdepth 1 ! -name *.enc* -type f | wc -l)
+    files_init=$(find /container/base/init/init.d/ /container/init/init.d/ -maxdepth 1 ! -name *.enc* ! -name .tiredofit ! zzz-container -type f 2>/dev/null | wc -l)
     declare -a files_init_name
     declare -a length_of_files_init_name
     for f in /container/init/init.d/*; do
@@ -9,7 +14,7 @@ if var_false "${CONTAINER_SKIP_SANITY_CHECK}" ; then
         files_init_name[${#files_init_name[@]}+1]=$(echo "$f" | sed -e "s#filename##g" -e "s#/container/init/init.d/##g" );
     done
 
-    init_complete=$(find /container/state/init/* -maxdepth 1 ! -name *.enc* -type f | wc -l)
+    init_complete=$(find /container/state/init/* -maxdepth 1 ! -name *.enc* ! -name *.enc* ! -name .tiredofit -type f 2>/dev/null | wc -l)
     declare -a init_complete_name
     declare -a length_of_init_complete_name
     for f in /container/state/init/*; do

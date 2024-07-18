@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: © 2024 Dave Conroy <dave@tiredofit.ca>
+#
+# SPDX-License-Identifier: MIT
+
 toi_configure_scheduling_cron_init() {
     mkdir -p /container/state/cron
 
@@ -40,7 +44,7 @@ EOF
     unset "${!CRON_@}"
 
     ## Defaults
-    for default in $(find /container/defaults/* -type f -print); do
+    for default in $(find /container/base/defaults/* /container/defaults/* /override/base/defaults/* /override/defaults/* -type f -print 2>/dev/null); do
         # shellcheck source=/container/defaults/
         output_off
         source "${default}"

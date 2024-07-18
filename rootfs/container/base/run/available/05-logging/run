@@ -6,9 +6,7 @@
 source /container/base/functions/container/init
 output_off
 PROCESS_NAME="logging"
-set -x
 prepare_service single
-set +x
 check_container_initialized
 check_service_initialized init
 

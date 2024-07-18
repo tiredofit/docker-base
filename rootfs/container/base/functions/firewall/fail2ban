@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: © 2024 Dave Conroy <dave@tiredofit.ca>
+#
+# SPDX-License-Identifier: MIT
+
 toi_configure_firewall_fail2ban_init() {
     print_notice "Container configured to block hosts via 'fail2ban'"
     print_debug "Fail2ban: Configure Logging"

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: © 2024 Dave Conroy <dave@tiredofit.ca>
+#
+# SPDX-License-Identifier: MIT
+
 toi_configure_logging_fluentbit_init() {
     os=$(cat /etc/os-release |grep ^ID= | cut -d = -f2)
     case ${os,,} in
@@ -182,7 +186,7 @@ EOF
                             unset "${!LOGSHIP_@}"
 
                             ## Defaults
-                            for default in $(find /container/defaults/* -type f ! -name *.enc* -print); do
+                            for default in $(find find /container/base/defaults/* /container/defaults/* /override/base/defaults* /override/defaults/* -type f ! -name *.enc* -print 2>/dev/null); do
                                 # shellcheck source=/container/defaults/
                                 source "${default}"
                                 logshipenv=$(mktemp)

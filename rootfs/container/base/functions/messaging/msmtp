@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: © 2024 Dave Conroy <dave@tiredofit.ca>
+#
+# SPDX-License-Identifier: MIT
+
 toi_configure_messaging_msmtp_init() {
     rm -f /usr/sbin/sendmail
     ln -s /usr/bin/msmtp /usr/sbin/sendmail

@@ -1,3 +1,8 @@
+#!/command/with-contenv bash
+# SPDX-FileCopyrightText: © 2024 Dave Conroy <dave@tiredofit.ca>
+#
+# SPDX-License-Identifier: MIT
+
 source /container/base/functions/container/init
 showoff
 
@@ -118,3 +123,4 @@ rm -rf /etc/logrotate.d/*
 
 echo "source /container/base/functions/container/run" > /etc/bash/toi_functions
 host_override
+liftoff

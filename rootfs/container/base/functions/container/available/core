@@ -28,22 +28,22 @@ dir_notempty() {
 get_image_version() {
     output_off
     if [ -n "${IMAGE_NAME}" ] ; then
-        if [ -f "/container/base/${IMAGE_NAME/\//_}/CHANGELOG.md" ] ; then
-            image_version=$(head -n1 /container/base/${IMAGE_NAME/\//_}/CHANGELOG.md | awk '{print $2}')
-            elif [ -f /container/base/docker-${IMAGE_NAME/\//_}/CHANGELOG.md ] ; then
-            image_version=$(head -n1 /container/base/docker-${IMAGE_NAME/\//_}/CHANGELOG.md | awk '{print $2}')
+        if [ -f "/container/build/${IMAGE_NAME/\//_}/CHANGELOG.md" ] ; then
+            image_version=$(head -n1 /container/build/${IMAGE_NAME/\//_}/CHANGELOG.md | awk '{print $2}')
+            elif [ -f /container/build/docker-${IMAGE_NAME/\//_}/CHANGELOG.md ] ; then
+            image_version=$(head -n1 /container/build/docker-${IMAGE_NAME/\//_}/CHANGELOG.md | awk '{print $2}')
         else
-            if [ -f /container/base/tiredofit_docker-${IMAGE_NAME/\//_}/CHANGELOG.md ] ; then
-                image_version=$(head -n1 /container/base/docker-${IMAGE_NAME/\//_}/CHANGELOG.md | awk '{print $2}')
+            if [ -f /container/build/tiredofit_docker-${IMAGE_NAME/\//_}/CHANGELOG.md ] ; then
+                image_version=$(head -n1 /container/build/docker-${IMAGE_NAME/\//_}/CHANGELOG.md | awk '{print $2}')
             else
                 strip_image_repo_url=$(echo ${IMAGE_REPO_URL%/} | sed "s#https://github.com/##g")
-                if [ -f /container/base/${strip_image_repo_url/\//_}/CHANGELOG.md ] ; then
-                    image_version=$(head -n1 /container/base/${strip_image_repo_url/\//_}/CHANGELOG.md | awk '{print $2}')
+                if [ -f /container/build/${strip_image_repo_url/\//_}/CHANGELOG.md ] ; then
+                    image_version=$(head -n1 /container/build/${strip_image_repo_url/\//_}/CHANGELOG.md | awk '{print $2}')
                 fi
             fi
 
-            if [ -f /container/base/tiredofit_docker-${IMAGE_NAME/\//_}/CHANGELOG.md ] ; then
-                image_version=$(head -n1 /container/base/tiredofit_docker-${IMAGE_NAME/\//_}/CHANGELOG.md | awk '{print $2}')
+            if [ -f /container/build/tiredofit_docker-${IMAGE_NAME/\//_}/CHANGELOG.md ] ; then
+                image_version=$(head -n1 /container/build/tiredofit_docker-${IMAGE_NAME/\//_}/CHANGELOG.md | awk '{print $2}')
             fi
         fi
 
