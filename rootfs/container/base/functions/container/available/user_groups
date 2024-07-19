@@ -8,7 +8,7 @@ create_user() {
     # $USER is mandatory all others will use defaults
 
     if [ -z "${1}" ] ; then
-        print_error "[create_user] No username provided"
+        echo "[create_user] No username provided"
         exit 99
     fi
 
@@ -28,16 +28,16 @@ create_user() {
 
     case "$(grep '^ID' /etc/os-release | cut -d = -f2)" in
         alpine )
-            print_debug "Adding Group ${_groupname} with ID ${_gid}"
-            silent addgroup -S -g ${_gid} "${_groupname}"
-            print_debug "Adding uid ${_uid} for user ${_user} gid ${_gid} group ${_groupname}"
-            silent adduser -D -S -h "${_home}" -s "${_shell}" -G "${_groupname}" -g "${_groupname}" -u "${_uid}" "${_username}"
+            echo "Adding Group ${_groupname} with ID ${_gid}"
+            addgroup -S -g ${_gid} "${_groupname}"
+            echo "Adding uid ${_uid} for user ${_user} gid ${_gid} group ${_groupname}"
+            adduser -D -S -h "${_home}" -s "${_shell}" -G "${_groupname}" -g "${_groupname}" -u "${_uid}" "${_username}"
         ;;
         debian )
-            print_debug "Adding Group ${_groupname} with ID ${_gid}"
-            silent addgroup --system --gid "${_gid}" "${_groupname}"
-            print_debug "Adding uid ${_uid} for user ${_username} gid ${_gid} group ${_groupname}"
-            silent adduser --disabled-password --system --home "${_home}" --shell "${_shell}" --ingroup "${_groupname}" -u "${_uid}" "${_username}"
+            echo "Adding Group ${_groupname} with ID ${_gid}"
+            addgroup --system --gid "${_gid}" "${_groupname}"
+            echo "Adding uid ${_uid} for user ${_username} gid ${_gid} group ${_groupname}"
+            adduser --disabled-password --system --home "${_home}" --shell "${_shell}" --ingroup "${_groupname}" -u "${_uid}" "${_username}"
         ;;
     esac
 

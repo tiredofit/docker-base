@@ -10,7 +10,7 @@ check_container_initialized() {
     ### Check to see Initialization Script ran
     print_debug "Checking to see if container initialization scripts have completed"
     output_off
-    while [ ! -f /container/state/init/0-container ]; do
+    while [ ! -f /container/state/init/zzz-container ]; do
         print_debug "Checking to see if container initialization scripts have completed"
         sleep 1
     done

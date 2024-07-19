@@ -128,3 +128,5 @@ if [ -n "${CONTAINER_POST_INIT_COMMAND}" ] ; then
         eval "${post_command}"
     done
 fi
+
+liftoff
