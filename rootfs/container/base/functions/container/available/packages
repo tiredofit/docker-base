@@ -54,7 +54,7 @@ package() {
                     apt-get install -y --no-install-recommends $@
                 else
                     for _package in $_package_install_list ; do
-                        if [ -v "${package^^}"_DEBIAN ] ; then
+                        if [ -v "${_package^^}"_DEBIAN ] ; then
                             local _packages
                             _packages=$(set -o posix; set | grep -E "^${_package^^}_DEBIAN" | cut -d = -f 2 | xargs)
                             apt-get install -y --no-install-recommends ${_packages}

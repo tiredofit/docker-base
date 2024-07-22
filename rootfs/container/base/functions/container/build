@@ -8,3 +8,4 @@ for build_function in /container/base/functions/container/build.d/* ; do
         source "${build_function}"
     fi
 done
+set -x
