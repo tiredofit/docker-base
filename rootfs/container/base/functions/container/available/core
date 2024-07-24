@@ -5,12 +5,15 @@
 source /container/base/defaults/container
 
 call() {
-    case $(type -t "${1}") in
+    _funcname="${1}"
+    shift 1
+    _funcarg="${@}"
+    case $(type -t "${_funcname}") in
         function)
-            $1
-            case $(type -t "${1}"_advanced) in
+            ${_funcname} ${_funcarg}
+            case $(type -t "${_funcname}"_advanced) in
                 function )
-                    "${1}"_advanced
+                    "${_funcname}"_advanced ${_funcarg}
                 ;;
             esac
         ;;
