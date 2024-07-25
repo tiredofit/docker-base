@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-if [ "${CONTAINER_ENABLE_MONITORING,,}" = "true" ]; then
+if [ "${CONTAINER_ENABLE_MESSAGING,,}" = "true" ]; then
     if [ -f "/container/base/functions/messaging/${CONTAINER_MESSAGING_BACKEND,,}" ]; then
         source /container/base/functions/messaging/"${CONTAINER_MESSAGING_BACKEND,,}"
     fi

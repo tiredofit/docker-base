@@ -4,7 +4,7 @@
 
 if [ "${CONTAINER_ENABLE_LOGROTATE,,}" = "true" ]; then
     if [ -f "/container/base/functions/logging/logrotate" ]; then
-        source /container/functions/logging/logrotate
+        source /container/base/functions/logging/logrotate
     fi
 fi
 
