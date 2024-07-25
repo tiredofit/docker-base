@@ -126,7 +126,7 @@ package() {
                     if [ -n "${3}" ] ; then
                         _package_repo_name="${2}"
                         shift 2
-                        echo "$@" > /etc/apt/sources.list.d/"${_package_repo_name}"
+                        echo "$@" > /etc/apt/sources.list.d/"${_package_repo_name}".list
                     fi
                 ;;
                 esac
