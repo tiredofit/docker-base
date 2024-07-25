@@ -157,12 +157,10 @@ print_start() {
     if [ "${CONTAINER_ENABLE_PROCESS_COUNTER,,}" = "true" ] ; then
         if [ -f /container/state/run/"$(basename $PWD)" ]; then
             proc_start_count=$(cat /container/state/run/"$(basename $PWD)" | wc -l)
-            (( proc_start_count+=1 ))
-        else
-            proc_start_count=1
+            proc_start_wrapper="[${proc_start_count}] "
         fi
 
-        proc_start_wrapper="[${proc_start_count}] "
+        if [ -z "${proc_start_count}" ] ; then proc_start_count=1 ; fi
 
         proc_help_arg="$(date +"${CONTAINER_PROCESS_HELPER_DATE_FMT}") $(date +"${CONTAINER_PROCESS_HELPER_TIME_FMT}") $(basename "$(pwd)") ${proc_start_count} $(cat /etc/hostname)"
         if [ -d "${CONTAINER_PROCESS_HELPER_PATH}" ]; then

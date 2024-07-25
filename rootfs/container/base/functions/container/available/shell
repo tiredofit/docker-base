@@ -83,42 +83,85 @@ zcat () {
     fi
 }
 
-## Show last changelog version and details of current running image
-if [ -f "/container/build/${IMAGE_NAME/\//_}/CHANGELOG.md" ] ; then
-    changelogname="/container/build/${IMAGE_NAME/\//_}/CHANGELOG.md"
-elif [ -f /container/build/docker-${IMAGE_NAME/\//_}/CHANGELOG.md ] ; then
-    changelogname="/container/build/docker-${IMAGE_NAME/\//_}/CHANGELOG.md"
-else
-    if [ -f /container/build/tiredofit_docker-${IMAGE_NAME/\//_}/CHANGELOG.md ] ; then
-        changelogname="/container/build/tiredofit_docker-${IMAGE_NAME/\//_}/CHANGELOG.md"
+image_changelog() {
+    ## Show last changelog version and details of current running image
+    if [ -f "/container/build/${IMAGE_NAME/\//_}/CHANGELOG.md" ] ; then
+        changelogname="/container/build/${IMAGE_NAME/\//_}/CHANGELOG.md"
+    elif [ -f /container/build/docker-${IMAGE_NAME/\//_}/CHANGELOG.md ] ; then
+        changelogname="/container/build/docker-${IMAGE_NAME/\//_}/CHANGELOG.md"
     else
-        strip_image_repo_url=$(echo ${IMAGE_REPO_URL%/} | sed "s#https://github.com/##g")
-        if [ -f /container/build/${strip_image_repo_url/\//_}/CHANGELOG.md ] ; then
-            changelogname="/container/build/${strip_image_repo_url/\//_}/CHANGELOG.md"
+        if [ -f /container/build/tiredofit_docker-${IMAGE_NAME/\//_}/CHANGELOG.md ] ; then
+            changelogname="/container/build/tiredofit_docker-${IMAGE_NAME/\//_}/CHANGELOG.md"
+        else
+            strip_image_repo_url=$(echo ${IMAGE_REPO_URL%/} | sed "s#https://github.com/##g")
+            if [ -f /container/build/${strip_image_repo_url/\//_}/CHANGELOG.md ] ; then
+                changelogname="/container/build/${strip_image_repo_url/\//_}/CHANGELOG.md"
+            fi
         fi
     fi
-fi
 
-## Add Support to list all Changelogs known of all base images
-image_version() {
-    for clname in "$(ls -t -r /container/build/)" ; do
-        if [ -f "${clname}"/CHANGELOG.md ]; then
-            version=$(head -n 1 "${clname}"/CHANGELOG.md | awk '{print $2}')
-            echo "Image: $(basename $clname) $version"
-        fi
-    done
+    if [ -z "${changelogname// }" ] ; then
+        echo "** Sorry - I do not know what image this is. Check if there are changelogs in /container/build"
+    else
+        echo "** Showing the most recent version entry changelog for ${IMAGE_NAME} - See more at /container/build"
+        awk '/^##/{p++} p==2{print; exit} p>=1' $changelogname | sed '$d'
+    fi
 }
 
-if [ -z "${changelogname// }" ] ; then
-    image_changelog() {
-        echo "** Sorry - I do not know what image this is. Check if there are changelogs in /container/image"
-    }
-else
-    image_changelog() {
-        echo "** Showing the most recent version entry changelog for ${IMAGE_NAME} - See more at /container/image"
-        awk '/^##/{p++} p==2{print; exit} p>=1' $changelogname | sed '$d'
-    }
-fi
+image_license() {
+    ## Show LICENSE details current running image
+    if [ -f "/container/build/${IMAGE_NAME/\//_}/LICENSE" ] ; then
+        licensename="/container/build/${IMAGE_NAME/\//_}/LICENSE"
+    elif [ -f /container/build/docker-${IMAGE_NAME/\//_}/LICENSE ] ; then
+        licensename="/container/build/docker-${IMAGE_NAME/\//_}/CHANGELOG.md"
+    else
+        if [ -f /container/build/tiredofit_docker-${IMAGE_NAME/\//_}/LICENSE ] ; then
+            licensename="/container/build/tiredofit_docker-${IMAGE_NAME/\//_}/LICENSE"
+        else
+            strip_image_repo_url=$(echo ${IMAGE_REPO_URL%/} | sed "s#https://github.com/##g")
+            if [ -f /container/build/${strip_image_repo_url/\//_}/LICENSE ] ; then
+                licensename="/container/build/${strip_image_repo_url/\//_}/LICENSE"
+            fi
+        fi
+    fi
+
+    if [ -z "${licensename// }" ] ; then
+        echo "** Sorry - I do not know what image this is. Check if there are LICENSE files in /container/build"
+    else
+        less "${licensename}"
+    fi
+}
+
+image_readme() {
+    ## Show README.md details current running image
+    if [ -f "/container/build/${IMAGE_NAME/\//_}/README.md" ] ; then
+        readmename="/container/build/${IMAGE_NAME/\//_}/README.md"
+    elif [ -f /container/build/docker-${IMAGE_NAME/\//_}/README.md ] ; then
+        readmename="/container/build/docker-${IMAGE_NAME/\//_}/CHANGELOG.md"
+    else
+        if [ -f /container/build/tiredofit_docker-${IMAGE_NAME/\//_}/README.md ] ; then
+            readmename="/container/build/tiredofit_docker-${IMAGE_NAME/\//_}/README.md"
+        else
+            strip_image_repo_url=$(echo ${IMAGE_REPO_URL%/} | sed "s#https://github.com/##g")
+            if [ -f /container/build/${strip_image_repo_url/\//_}/README.md ] ; then
+                readmename="/container/build/${strip_image_repo_url/\//_}/README.md"
+            fi
+        fi
+    fi
+
+    if [ -z "${readmename// }" ] ; then
+        echo "** Sorry - I do not know what image this is. Check if there are README.md files in /container/build"
+    else
+        less "${readmename}"
+    fi
+}
+
+## Add Support to list all Changelogs known of all images used to build
+image_version() {
+    for clname in $(find /container/build/*/CHANGELOG.md -type f -exec ls -1rt "{}" +; 2>/dev/null) ; do
+        iver=$(head -n 1 "${clname}" | awk '{print $2}')
+        echo "Image: $(basename $(echo $(dirname $clname) )) ${iver}";     done
+}
 
 ## Rewrite Bash Prompt
 if [ -n "${CONTAINER_CUSTOM_BASH_PROMPT}" ] ; then

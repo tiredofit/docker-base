@@ -285,28 +285,6 @@ transform_var() {
     esac
 }
 
-#transform_file_var() {
-#    ## TODO phase out
-#    ## Docker Secrets Support
-#    ## usage: transform_file_var VAR
-#    ##    ie: transform_file_var 'XYZ_DB_PASSWORD'
-#    ##        (will allow for "$XYZ_DB_PASSWORD_FILE" to fill in the value of "$XYZ_DB_PASSWORD" from a file, especially for Docker's secrets feature)
-#    local variables
-#    variables=$(echo "$@" | tr " " "\n")
-#    for variable in $variables; do
-#        if [ -v "${variable}"_FILE ] ; then
-#            file_variable=${variable}_FILE
-#            if [ ! -f "${!file_variable}" ] ; then
-#                print_error "[transform_file_var] ${variable}_FILE set as environment variable, however file doesn't exist"
-#                return 1
-#            fi
-#            export "${variable}"="$(cat "${!file_variable}")"
-#        fi
-#    done
-#    unset file_variable
-#    unset variables
-#}
-
 truefalse_onoff() {
     ## Convert TRUE or FALSE statements to either yes or no
     ## Usage: 'truefalse_yesno varname'
