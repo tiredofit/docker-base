@@ -92,12 +92,11 @@ package() {
                 _package_removal_list="$@"
                 for _package in $_package_removal_list ; do
                     if [ -v "${_package^^}"_DEBIAN ] ; then
-                        _package_removal_list+=$(set -o posix; set | grep -E "^${1}_DEBIAN" | cut -d = -f 2 | xargs)
-                        _package_removal_list+=$(echo "$_package_removal_list" | sed -e "s|${_package^^}_DEBIAN||g" -e "s|${_package^^}||g")
-                   else
+                        _package_removal_list+=$(set -o posix; set | grep -E "^${_package^^}_DEBIAN" | cut -d = -f 2 | xargs)
+                        _package_removal_list=$(echo "$_package_removal_list" | sed -e "s|${_package^^}_DEBIAN||g" -e "s|${_package^^}||g")
+                    else
                         _package_removal_list+=" ${_package} "
                     fi
-
                 done
 
                 if [[ "${_packages_removal_list}" =~ \..* ]] ; then
