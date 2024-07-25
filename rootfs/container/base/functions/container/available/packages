@@ -83,7 +83,6 @@ package() {
                    else
                         _package_removal_list+=" ${_package} "
                     fi
-
                 done
 
                 apk del $_package_removal_list
@@ -105,6 +104,36 @@ package() {
 
                 apt-get purge -y ${_package_removal_list}
                 apt-get autoremove -y
+            ;;
+        esac
+    }
+
+    repo () {
+        case "{$1}" in
+            add )
+                case "${distro}" in
+                "alpine" )
+                    if [ -n "${3}" ] ; then
+                        _package_repo_name="${2}"
+                        shift 2
+                        echo "$@" > /etc/apk/repositories/"${_package_repo_name}"
+                    fi
+                ;;
+                "debian" | "ubuntu" )
+                    if [ -n "${3}" ] ; then
+                        _package_repo_name="${2}"
+                        shift 2
+                        echo "$@" > /etc/apt/sources.list.d/"${_package_repo_name}"
+                    fi
+                ;;
+                esac
+            ;;
+            key )
+                case "${distro}" in
+                    "debian" | "ubuntu" )
+                        curl -sSLk "${2}" | apt-key add -
+                    ;;
+                esac
             ;;
         esac
     }
@@ -145,6 +174,10 @@ package() {
         ;;
         delete | remove | uninstall )
             action=remove
+            "${action}" "${arguments}"
+        ;;
+        repo )
+            action=repo
             "${action}" "${arguments}"
         ;;
         * )
