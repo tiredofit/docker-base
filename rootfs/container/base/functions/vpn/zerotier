@@ -84,6 +84,7 @@ EOF
                             ZEROTIER_NETWORK
 
         if [ -n "${ZEROTIER_NETWORK}" ] ; then
+            mkdir -p /var/lib/zerotier-one/networks.d
             _zt_network_list=$(echo "${ZEROTIER_NETWORK}" | tr ' ' '\n')
 
             _zt_join_network() {
@@ -119,7 +120,6 @@ EOF
         "primaryPort": ${ZT_PRIMARY_PORT:-${ZEROTIER_LISTEN_PORT}},
         "portMappingEnabled": ${ZT_PORT_MAPPING_ENABLED:-${ZEROTIER_ENABLE_PORT_MAPPING,,}},
         "softwareUpdate": "disable",
-        "allowManagementFrom": [${management_networks}],
         "allowTcpFallbackRelay": ${ZT_ALLOW_TCP_FALLBACK_RELAY:-${ZEROTIER_ALLOW_TCP_FALLBACK_RELAY,,}}
     }
   }
