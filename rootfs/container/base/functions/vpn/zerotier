@@ -15,6 +15,8 @@ toi_configure_vpn_zerotier_init() {
             ln -sf "${ZEROTIER_DATA_PATH}" /var/lib/zerotier-one
         fi
 
+        chmod 700 /var/lib/zerotier-one
+
         if [ ! -d "${ZEROTIER_LOG_PATH}" ]; then
             mkdir -p "${ZEROTIER_LOG_PATH}"
         fi
@@ -75,10 +77,42 @@ EOF
 
     zerotier_configure_controller() {
         if var_false "${ZEROTIER_ENABLE_METRICS}" ; then ln -sf /dev/null /var/lib/zerotier-one/metrics.prom ; fi
-        for management_network in ${ZEROTIER_MANAGEMENT_NETWORKS//,/$IFS}; do
-            management_networks=${management_networks}"\"${management_network}\","
-        done
-        management_networks=$(echo ${management_networks} | sed "s|,$||g")
+
+        transform_var file \
+                            ZEROTIER_IDENTITY_PUBLIC \
+                            ZEROTIER_IDENTITY_PRIVATE \
+                            ZEROTIER_NETWORK
+
+        if [ -n "${ZEROTIER_NETWORK}" ] ; then
+            _zt_network_list=$(echo "${ZEROTIER_NETWORK}" | tr ' ' '\n')
+
+            _zt_join_network() {
+              echo "Joining $1"
+              touch /var/lib/zerotier-one/networks.d/"$1".conf
+            }
+
+            for ztnetwork in $network_list ; do
+                [[ "${ztnetwork}" =~ ^[[:space:]]*# ]] && continue
+                  if [ -f ${ztnetwork} ] ; then
+                  print_debug "[zerotier] [network] Reading networks from file"
+                  while read ztline; do
+                    [[ "${ztline}" =~ ^[[:space:]]*# ]] && continue
+                      _zt_join_network $(echo ${ztline} | awk '{print $1}')
+                  done < "$ztnetwork"
+                else
+                    _zt_join_network $ztnetwork
+                fi
+            done
+        fi
+
+        if [ -n "${ZEROTIER_IDENTITY_PUBLIC}" ] ; then
+            echo "${ZEROTIER_IDENTITY_PUBLIC}" > /var/lib/zerotier-one/identity.public
+        fi
+
+        if [ -n "${ZEROTIER_IDENTITY_PRIVATE}" ] ; then
+            echo "${ZEROTIER_IDENTITY_PRIVATE}" > /var/lib/zerotier-one/identity.secret
+        fi
+
         cat <<EOF > /var/lib/zerotier-one/local.conf
   {
     "settings": {
