@@ -15,7 +15,7 @@ create_zabbix() {
         fi
         print_debug "Adding Zabbix Auto Register configuration for '$1'"
         if var_true "${CONTAINER_ENABLE_MONITORING}" && [ "${CONTAINER_MONITORING_BACKEND,,}" = "zabbix" ]; then
-            source /container/base/defaults/defaults/*-monitoring
+            source /container/base/defaults/*-monitoring
             cat <<EOF > "${ZABBIX_CONFIG_PATH}"/"${ZABBIX_CONFIG_FILE}.d"/tiredofit_"$1".conf
 # Zabbix $1 Configuration - Automatically Generated
 # Autoregister=$autoregister
