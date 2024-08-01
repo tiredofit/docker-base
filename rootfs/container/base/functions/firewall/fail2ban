@@ -129,7 +129,7 @@ EOF
     fi
 
     if var_true "${CONTAINER_ENABLE_MONITORING}" && [ "${CONTAINER_MONITORING_BACKEND,,}" = "zabbix" ]; then
-        source /container/defaults/03-monitoring
+        source /container/base/defaults/defaults/*-monitoring
         cat <<EOF > "${ZABBIX_CONFIG_PATH}"/"${ZABBIX_CONFIG_FILE}".d/tiredofit-fail2ban.conf
 # Zabbix Fail2ban Configuration - Automatically generated based on container startup options
 # Find Companion Zabbix Server Templates at https://github.com/tiredofit/docker-base

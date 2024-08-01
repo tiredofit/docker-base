@@ -7,20 +7,15 @@ toi_configure_vpn_zerotier_init() {
         if [ ! -d "${ZEROTIER_DATA_PATH}" ]; then
             mkdir -p "${ZEROTIER_DATA_PATH}"
         fi
-
         if [ "$(stat -c %U "${ZEROTIER_DATA_PATH}")" != "zerotier" ] ; then chown "${ZEROTIER_USER}":"${ZEROTIER_GROUP}" "${ZEROTIER_DATA_PATH}" ; fi
-
         if [ "${ZEROTIER_DATA_PATH}" != "/var/lib/zerotier-one" ]; then
             rm -rf /var/lib/zerotier-one
             ln -sf "${ZEROTIER_DATA_PATH}" /var/lib/zerotier-one
         fi
-
         chmod 700 /var/lib/zerotier-one
-
         if [ ! -d "${ZEROTIER_LOG_PATH}" ]; then
             mkdir -p "${ZEROTIER_LOG_PATH}"
         fi
-
         if [ "$(stat -c %U "${ZEROTIER_LOG_PATH}")" != "zerotier" ] ; then chown -R "${ZEROTIER_USER}":"${ZEROTIER_GROUP}" "${ZEROTIER_LOG_PATH}" ; fi
     }
 
