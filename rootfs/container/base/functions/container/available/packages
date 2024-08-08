@@ -16,8 +16,10 @@ package() {
 
         rm -rf \
                 /etc/logrotate.d/* \
-                /root/.gitconfig \
                 /root/.cache \
+                /root/.cargo \
+                /root/.gitconfig \
+                /root/.npm \
                 /root/go \
                 /tmp/* \
                 /usr/src/* \
