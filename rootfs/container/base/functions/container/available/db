@@ -6,8 +6,8 @@ db_ready() {
     ## Usage db_ready <dbtype>
     output_off
     print_debug "Checking to see if Database Type $1 is ready"
-    case "$1" in
-        "couch" | "couchdb" )
+    case "${1,,}" in
+        couch* )
             transform_var file DB_PORT
             if [ -n "${DB_PORT}" ] ; then couch_port=${DB_PORT} ; fi ;
             transform_var file COUCHDB_PORT
@@ -25,7 +25,7 @@ db_ready() {
                 print_warn "CouchDB Host '${couch_host}' is not accessible, retrying.. ($counter seconds so far)"
             done
         ;;
-        "influx" | "influxdb" )
+        influx* )
             transform_var file DB_PORT
             if [ -n "${DB_PORT}" ] ; then influx_port=${DB_PORT} ; fi ;
             transform_var file INFLUXDB_PORT
@@ -42,7 +42,7 @@ db_ready() {
                 print_warn "InfluxDB Host '${influx_host}' is not accessible, retrying.. ($counter seconds so far)"
             done
         ;;
-        "mongo" | "mongodb" )
+        mongo* )
             transform_var file DB_PORT
             if [ -n "${DB_PORT}" ] ; then mongo_port=${DB_PORT} ; fi ;
             transform_var file MONGO_PORT
@@ -59,7 +59,7 @@ db_ready() {
                 print_warn "Mongo Host '${mongo_host}' is not accessible, retrying.. ($counter seconds so far)"
             done
         ;;
-        "mysql" | "mariadb" | "MARIADB" | "MYSQL" )
+        mysql | maria* )
             if command -v "mysqladmin" &> /dev/null ; then
                 mysqladmin_bin="$(which mysqladmin)"
             elif command -v "mariadb-admin" &> /dev/null ; then
@@ -106,7 +106,7 @@ db_ready() {
                 print_warn "MySQL/MariaDB Server '${maria_host}' is not accessible, retrying.. (${counter} seconds so far)"
             done
         ;;
-        "pgsql" | "psql" | "postgres" | "postgresql" )
+        postgres* | psql | pgsql )
             if command -v "pg_isready" &> /dev/null ; then
                 pg_isready_bin="$(which pg_isready)"
             else
@@ -143,7 +143,7 @@ db_ready() {
                 print_warn "Postgres Host '${postgres_host}' is not accessible, retrying.. ($counter seconds so far)"
             done
         ;;
-        "rabbit" | "rabbitmq" )
+        rabbit* )
             transform_var file DB_PORT
             if [ -n "${DB_PORT}" ] ; then rabbit_port=${DB_PORT} ; fi ;
             transform_var file RABBIT_PORT
@@ -201,7 +201,7 @@ sanity_db() {
     output_off
     if [ -n "$1" ] ; then
         case "${1,,}" in
-            "couch" | "couchdb" )
+            couch* )
                 print_debug "Checking Couch DB Parameters"
                 transform_var file DB_HOST
                 if [ -n "${DB_HOST}" ] ; then couch_host=${DB_HOST} ; fi ;
@@ -212,7 +212,7 @@ sanity_db() {
                     exit 1
                 fi
             ;;
-            "influx" | "influxdb")
+            influx* )
                 print_debug "Checking Influx DB Parameters"
                 if [ -n "${DB_HOST}" ] ; then influx_host=${DB_HOST} ; fi ;
                 transform_var file DB_HOST
@@ -223,7 +223,7 @@ sanity_db() {
                     exit 1
                 fi
             ;;
-            "mongo" | "mongodb" )
+            mongo* )
                 print_debug "Checking Mongo DB Parameters"
                 if [ -n "${DB_HOST}" ] ; then mongo_host=${DB_HOST} ; fi ;
                 transform_var file DB_HOST
@@ -277,7 +277,7 @@ sanity_db() {
                     exit 1
                 fi
             ;;
-            "pgsql" | "psql" | "postgres" | "postgresql" )
+            postgres* | "pgsql" | "psql" )
                 print_debug "Checking Postgres DB Parameters"
                 transform_var file DB_HOST
                 if [ -n "${DB_HOST}" ] ; then postgres_host=${DB_HOST} ; fi ;
@@ -312,7 +312,7 @@ sanity_db() {
                     exit 1
                 fi
             ;;
-            "rabbit" | "rabbitmq" )
+            rabbit* )
                 transform_var file DB_HOST
                 if [ -n "${DB_HOST}" ] ; then rabbit_host=${DB_HOST} ; fi ;
                 transform_var file RABBIT_HOST

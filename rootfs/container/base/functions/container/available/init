@@ -148,35 +148,6 @@ get_defaults() {
                                 output_on
                             ;;
                         esac
-                        #if [ -f "/container/defaults/$(basename "$PWD")" ] ; then
-                        #    print_debug "Container: Getting defaults for '$(basename "$PWD")' (single wildcard)"
-                        #    # shellcheck source=/container/defaults/
-                        #    case "$(basename "$PWD")" in
-                        #        0*-* | 99-* )
-                        #            output_off
-                        #            source /container/defaults/"$(basename "$PWD")"
-                        #            output_on
-                        #        ;;
-                        #        * )
-                        #            source /container/defaults/"$(basename "$PWD")"
-                        #        ;;
-                        #    esac
-                        #elif [ -f "/override/defaults/$(basename "$PWD")" ] ; then
-                        #    print_info "Container Override: Getting defaults for '$(basename "$PWD")' (single wildcard)"
-                        #    # shellcheck source=/override/defaults/
-                        #    case "$(basename "$PWD")" in
-                        #        0*-* | 99-* )
-                        #            output_off
-                        #            source /override/defaults/"$(basename "$PWD")"
-                        #            output_on
-                        #        ;;
-                        #        * )
-                        #            source /override/defaults/"$(basename "$PWD")"
-                        #        ;;
-                        #    esac
-                        #else
-                        #    print_debug "Container: No defaults available for $(basename "$PWD") (single wildcard)"
-                        #fi
 
                         if [ "${INFISICAL_SECRETS_FILE}" = "$(basename "$PWD")" ]; then ## TODO SECRETS MANAGEMENT
                             if [ -f "${INFISICAL_SECRETS_PATH}"/"${INFISICAL_SECRETS_FILE}" ] ; then
@@ -211,36 +182,6 @@ get_defaults() {
                         source "${default_script}"
                     done
 
-                    #if [ -f "/container/defaults/${default}" ] ; then
-                    #    print_debug "Container: Getting defaults for '${default}' (wildcard)"
-                    #    # shellcheck source=/container/defaults/
-                    #    case "${default}" in
-                    #        0*-* | 99-* )
-                    #            output_off
-                    #            source /container/defaults/"${default}"
-                    #            output_on
-                    #        ;;
-                    #        * )
-                    #            source /container/defaults/"${default}"
-                    #        ;;
-                    #    esac
-                    #elif [ -f "/override/defaults/${default}" ] ; then
-                    #    print_info "Container Override: Getting defaults for '${default}' (wildcard)"
-                    #    # shellcheck source=/override/defaults/
-                    #    case "${default}" in
-                    #        0*-* | 99-* )
-                    #            output_off
-                    #            source /override/defaults/"${default}"
-                    #            output_on
-                    #        ;;
-                    #        * )
-                    #            source /override/defaults/"${default}"
-                    #        ;;
-                    #    esac
-                    #else
-                    #    print_debug "Container: No defaults available for '${default}' (wildcard)"
-                    #fi
-
                     if [ "${INFISICAL_SECRETS_FILE}" = "${default}" ]; then ## TODO SCRIPTS
                         if [ -f "${INFISICAL_SECRETS_PATH}"/"${INFISICAL_SECRETS_FILE}" ] ; then
                             output_off
@@ -252,7 +193,7 @@ get_defaults() {
             ;;
         esac
     else
-        for default in $(find /container/base/defaults/* /container/defaults/* -type f ! -name *.enc* -print -maxdepth 1 2>/dev/null); do
+        for default in $(find /container/base/defaults/* /container/defaults/* -type f ! -name *.enc* -print -maxdepth 0 2>/dev/null); do
             print_debug "Container: Getting defaults for '${default}' (last resort)"
             # shellcheck source=/container/defaults/
             case "$(basename "${default}")" in
@@ -266,7 +207,7 @@ get_defaults() {
                 ;;
             esac
         done
-        for default in $(find /override/base/defaults/* /override/defaults/* -type f ! -name *.enc* -print -maxdepth 1 2>/dev/null); do
+        for default in $(find /override/base/defaults/* /override/defaults/* -type f ! -name *.enc* -print -maxdepth 0 2>/dev/null); do
             print_debug "Container Override: Getting defaults for '${default}' (last resort)"
             # shellcheck source=/override/defaults/
             source "${default}"
@@ -276,51 +217,6 @@ get_defaults() {
             source "${INFISICAL_SECRETS_PATH}"/"${INFISICAL_SECRETS_FILE}"
             output_on
         fi
-        #for default in $(find /container/defaults/* -type f ! -name *.enc* -print -maxdepth 1 2>/dev/null); do
-        #    # shellcheck source=/container/defaults/
-        #    case "$(basename "${default}")" in
-        #        0*-* | 99-* )
-        #            output_off
-        #            source /container/base/defaults/container
-        #            if [ -f "${default}" ] ; then
-        #                print_debug "Container: Getting defaults for '${default}' (last resort)"
-        #                source "${default}"
-        #            fi
-        #            output_on
-        #        ;;
-        #        * )
-        #            source /container/base/defaults/container
-        #            if [ -f "${default}" ] ; then
-        #                print_debug "Container: Getting defaults for '${default}' (last resort)"
-        #                source "${default}"
-        #            fi
-        #        ;;
-        #    esac
-        #done
-        #for default in /override/defaults/* ; do
-        #    # shellcheck source=/override/defaults/
-        #    case "$(basename "${default}")" in
-        #        0*-* | 99-* )
-        #            output_off
-        #            if [ -f "${default}" ] ; then
-        #                print_info "Container Override: Getting defaults for '${default}' (last resort)"
-        #                source "${default}"
-        #            fi
-        #            output_on
-        #        ;;
-        #        * )
-        #            if [ -f "${default}" ] ; then
-        #                print_info "Container Override: Getting defaults for '${default}' (last resort)"
-        #                source "${default}"
-        #            fi
-        #        ;;
-        #    esac
-        #done
-        #if [ -f "${INFISICAL_SECRETS_PATH}"/"${INFISICAL_SECRETS_FILE}" ] ; then
-        #    output_off
-        #    source "${INFISICAL_SECRETS_PATH}"/"${INFISICAL_SECRETS_FILE}"
-        #    output_on
-        #fi
     fi
 }
 
@@ -418,11 +314,11 @@ get_functions() {
             ;;
         esac
     else
-        for function in $(find /container/base/functions/* /container/functions/* -type f ! -name *.enc* -print -maxdepth 1 2>/dev/null); do
+        for function in $(find /container/base/functions/* /container/functions/* -type f ! -name *.enc* -print -maxdepth 0 2>/dev/null); do
             print_debug "Container: Getting functions for '${function}' (last resort)"
             source "${function}"
         done
-        for function in $(find /override/base/functions/* /override/functions/* -type f ! -name *.enc* -print -maxdepth 1 2>/dev/null); do
+        for function in $(find /override/base/functions/* /override/functions/* -type f ! -name *.enc* -print -maxdepth 0 2>/dev/null); do
             # shellcheck source=/override/functions/
             source "${function}"
             print_info "Container Override: Getting functions for '${function}' (last resort)"

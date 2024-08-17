@@ -70,19 +70,6 @@ service_up() {
     fi
 }
 
-zcat () {
-    if [ -f "$@" ] ; then
-        case "$@" in
-            *.zst* )    $(which zcat) "$@" ;;
-            *.bz*)      $(which zcat) "$@" ;;
-            *.gz*)      $(which zcat) "$@" ;;
-            *.xz)       $(which zcat) "$@" ;;
-        esac
-    else
-        echo "'$@' is not a valid file!"
-    fi
-}
-
 image_changelog() {
     ## Show last changelog version and details of current running image
     if [ -f "/container/build/${IMAGE_NAME/\//_}/CHANGELOG.md" ] ; then
@@ -173,5 +160,18 @@ else
     fi
     bash_prompt="[${IMAGE_NAME}${bash_ver} \\t \\w] $ "
 fi
+
+zcat () {
+    if [ -f "$@" ] ; then
+        case "$@" in
+            *.zst* )    $(which zcat) "$@" ;;
+            *.bz*)      $(which zcat) "$@" ;;
+            *.gz*)      $(which zcat) "$@" ;;
+            *.xz)       $(which zcat) "$@" ;;
+        esac
+    else
+        echo "'$@' is not a valid file!"
+    fi
+}
 
 export PS1="${bash_prompt/  /}"

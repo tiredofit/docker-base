@@ -114,7 +114,7 @@ package() {
         esac
     }
 
-    repo () {
+    repo() {
         case "${1}" in
             add )
                 case "${distro}" in

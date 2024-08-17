@@ -13,8 +13,4 @@ service_start() {
 service_stop() {
     mkdir -p /container/state/init/
     echo "DONOTSTART added by $(basename "$0")" >> /container/state/init/"${1}"
-    #if [ "${1}" != "$(basename "$0")" ] ; then
-    #    echo "DONOTSTART added by $(basename \""$0"\")" >> /tmp/.container/"${1}"-init
-    #fi
-    #DONOTSTART=TRUE
 }
